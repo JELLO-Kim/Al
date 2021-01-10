@@ -1,1 +1,5 @@
-print("강한친구 대한육군\n"*2)"
+while True:
+    try:
+        print(input())
+    except EOFError:
+        break
