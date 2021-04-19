@@ -1,19 +1,24 @@
 # Algorithm_python
 python을 사용한 algorithm 문제풀이를 기록합니다.
+추가로 raw query문 활용을 기록합니다. (SQL folder)
 
 <br>
 <br>
 
-***
-
-<br>
-
+**
 # folder 설명
+
+<br>
+
+## SQL
+raw query문을 활용한 코드의 풀이와 조건에 맞는 SQL문 활용 연습을 기록합니다
 
 <br>
 
 ## before_wecode
 코딩 부트캠프 수강 전 **"백준"** 사이트의 단계별 문제풀이를 기록
+
+<br>
 
 ## 00 : 포함되는 풀이법의 간략한 category
 - 인프런의 "파이썬을 활용한 알고리즘" 수강. 세션별 여러 문제들에 대한 풀이를 기록
