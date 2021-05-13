@@ -1,9 +1,11 @@
 # 1. 특정 시간대의 갯수 파악하기
+
+## 💡 문제
 datetime 형태로 입력된 field값들 중 각 시간대의 data 갯수를 파악해 "특정 시간"대의 값만을 출력해야 한다.
 
 <br>
 
-### Sol 1 : substr()활용하기
+### ⚙️ Sol1 : SUBSTRING() 사용하기
 ```sql
 SELECT *
 FROM (
@@ -21,16 +23,17 @@ WHERE
     TIME BETWEEN "09" AND "19"
 ```
 
-### 풀이
->첫번째 query = SELECT *
+첫번째 query = SELECT * <p>
 두번째 query = sub query
 
 #### 두번째 query
 - substring()을 사용하였다. 그래서 datetime 타입으로 인해 yyyy-mm-dd hh:mm:ss 로 표기되던 형태에서 12번째 index 즉, 시간이 표기되기 시작하는 index로부터 2개길이만큼만 확인한다. (별칭 = TIME)
-> **substring() ?? **
-- substring(column 명, 시작 index, 지속 len)
-- substring() 혹은 substr() 이라고 표기한다.
-- 첫번째의 index는 1이다.
+<br>
+
+> **substring() ??**
+>- substring(column 명, 시작 index, 지속 len)
+>- substring() 혹은 substr() 이라고 표기한다.
+>- 첫번째의 index는 1이다.
 
 - GROUP BY로 시간에 대한것으로 묶은 후, COUNT 하여 각 시간마다의 갯수를 파악했다.
 - ORDER BY로 시간별 오름차순으로 정렬해 주었다.
@@ -40,12 +43,12 @@ WHERE
 - subquery로 가져온 값 모두를 가져온다.
 - WHERE절을 통해 그중에서 시간이 09 ~ 19 인것만 가져오게 한다.
 
-### 아쉬운점
+### 🔥 아쉬운점
 시간에 대한 값을 "문자열"로 가져왔기 때문에 9 가 아닌 09로 표시된다. 09에서 9를 없애기 위해 다음의 풀이법을 참고하였다.
 
 <br>
 
-### Sol2 : HOUR 사용하기
+### ⚙️ Sol2 : HOUR 사용하기
 
 > ** MySQL의 함수 **
 MySQL에 있는 여러 함수들 중 날짜에 관련된 함수들이 있다.
@@ -98,29 +101,12 @@ GROUP BY에서 HAVING절은 SELECT절에서 사용한 column의 별칭을 사용
 <br>
 <br>
 
-# 2. RECURSIVE 사용하기
-MySQL에서 가상의 테이블을 만드는 방법이다.
-```sql
-WITH RECURSIVE 테이블명 AS(
-    SELECT 초기값 AS 별칭1
-        UNION ALL
-        SELECT 별칭1 계산식 FROM 테이블명 WHERE 제어조건
-    )
-```
-- 테이블명에 대해서 가상의 테이블을 만든다
-- AS : 테이블이 성립되는 조건이 담긴다
-- 초기값 : 해당 값의 처음 값을 지정한다
-- UNION : 이후 지정되는 값들을 모두 더해준다
-> ** UNION ?**
+# 2. 없는 값으로 column 사용하기
 
-- 계산식 : 초기값으로 지정된 별칭1의 값을 이후 풀어나갈 계산식이다 (ex_ +1)
-- FROM 테이블명 : 처음에 지정한 가상의 테이블을 지칭한다
-- WHERE : 제어조건을 지정해준다. (ex_ 별칭1 < 10)
-
-### 문제
+### 💡 문제
 주어진 시간대가 07 ~ 19까지만 있는 table 이지만 최종적으로 반환되는 값에는 0시부터 24시까지 포함되어야 한다. 각 시간대별의 data 갯수를 표기하라.
 
-### Sol1 : NATURAL JOIN 활용하기
+### ⚙️ Sol1 : NATURAL JOIN 활용하기
 > **NATURAL JOIN**
 서로 다른 두 테이블간에 동일한 이름, 타입을 사용하는 column이 존재할때 사용하는 JOIN이다.
 
@@ -142,7 +128,26 @@ RECURSIVE로 가상의 테이블을 생성하지 않아 없는 값에대한 colu
 
 <br>
 
-### Sol2 : RECURSIVE 활용하기
+### ⚙️ Sol2 : RECURSIVE 활용하기
+
+MySQL에서 가상의 테이블을 만드는 방법이다.
+```sql
+WITH RECURSIVE 테이블명 AS(
+    SELECT 초기값 AS 별칭1
+        UNION ALL
+        SELECT 별칭1 계산식 FROM 테이블명 WHERE 제어조건
+    )
+```
+- 테이블명에 대해서 가상의 테이블을 만든다
+- AS : 테이블이 성립되는 조건이 담긴다
+- 초기값 : 해당 값의 처음 값을 지정한다
+- UNION : 이후 지정되는 값들을 모두 더해준다
+> ** UNION ?**
+
+- 계산식 : 초기값으로 지정된 별칭1의 값을 이후 풀어나갈 계산식이다 (ex_ +1)
+- FROM 테이블명 : 처음에 지정한 가상의 테이블을 지칭한다
+- WHERE : 제어조건을 지정해준다. (ex_ 별칭1 < 10)
+
 
 ```sql
 WITH RECURSIVE TIME AS(
