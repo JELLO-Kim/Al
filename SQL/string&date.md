@@ -169,3 +169,122 @@ CASE
 <br>
 
 # Date
+
+## 문제1 : 두가지 datetimefiled 값 비교해 가장 큰 두개 찾기
+
+### Sol1 : subquery에서 계산하여 값 구하기, 가장 큰 두개는 limit으로 구현
+```sql
+SELECT
+    PERIOD.ANIMAL_ID,
+    PERIOD.NAME
+FROM (
+    SELECT
+        I.ANIMAL_ID AS ANIMAL_ID,
+        I.NAME AS NAME,
+        (O.DATETIME - I.DATETIME)
+    FROM
+        ANIMAL_INS AS I
+    INNER JOIN
+        ANIMAL_OUTS AS O
+        ON I.ANIMAL_ID = O.ANIMAL_ID
+    ORDER BY
+        (O.DATETIME - I.DATETIME) DESC
+    ) AS PERIOD
+LIMIT 2
+```
+
+<br>
+
+### Sol1-1 : 불필요한 subquery 제거
+```sql
+SELECT
+    I.animal_id,
+    i.name
+FROM
+    ANIMAL_INS AS I
+INNER JOIN
+    ANIMAL_OUTS AS O
+    ON I.ANIMAL_ID = O.ANIMAL_ID
+ORDER BY
+    (O.DATETIME - I.DATETIME) DESC
+LIMIT 2
+```
+
+<br>
+
+### Sol2 : TIMESTAMPDIFF() 함수 사용하기
+
+**TIMESTAMPDIFF()**
+```sql
+TIMESTAMPDIFF(단위, 날짜1, 날짜2)
+```
+> **단위**
+>- SECOND : 초
+>- MINUTE : 분
+>- HOUR : 시
+>- DAY : 일
+>- WEEK : 주
+>- MONTH : 월
+>- QUARTER : 분기
+>- YEAR : 연
+
+```sql
+select o.animal_id, o.name
+from animal_outs o 
+    inner join animal_ins i using(animal_id)
+order by timestampdiff(minute, i.datetime, o.datetime) desc
+limit 2
+```
+
+## 문제2 : DATETIME에서 DATE로 자료형 변환하기
+
+yyyy-mm-dd hh:mm:ss 형태에서 yyyy-mm-dd 만 출력하기
+
+<br>
+
+### Sol1 : substring()사용하기
+```sql
+SELECT
+    animal_id,
+    name,
+    substring(datetime, 1, 10) AS "날짜"
+from
+    animal_ins
+```
+
+<br>
+
+### Sol2 : DATE_FORMAT()함수 사용하기
+
+```sql
+DATE_FORMAT(날짜,'형식') : 날짜를 형식에 맞게 출력
+```
+
+#### +) FORMAT()함수
+```sql
+FORMAT(숫자, 소수점자리)
+
+# 예제1
+FORMAT(10000,0)
+> 10,000
+
+# 예제2
+FORMAT(123456,3)
+> 123,456.00
+```
+
+```sql
+SELECT ANIMAL_ID, NAME, DATE_FORMAT(DATETIME, "%Y-%m-%d")  AS '날짜'
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID ASC
+```
+### 오답 : CAST함수 사용해 자료형 변환하기
+```sql
+SELECT
+    animal_id,
+    name,
+    CAST(datetime AS date) AS "날짜"
+from
+    animal_ins
+```
+이렇게 풀었더니 hh:mm:ss 부분이 사라지는것이 아니고 "00:00:00"으로 표기되더라!
