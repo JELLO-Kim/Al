@@ -38,7 +38,7 @@ if __name__=='__main__':
 # 십진수를 이진수를 바꾸는 법 활용 & 재귀함수 사용
 def DFS(x):
     if x==0:
-        break
+        return
     DFS(x//2)
     print(x%2, end='')
 

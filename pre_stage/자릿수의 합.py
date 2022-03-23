@@ -7,7 +7,7 @@ tmp=[0]*(N)
 # 들어온 자연수의 각 자리수 합을 구하는 함수
 def digit_sum(x):
     tmp=0
-    for i in in str(x): # 자연수 하나를 각 자리수별로 자르기 위해 string화 하여 반복문을 진행한다.
+    for i in str(x): # 자연수 하나를 각 자리수별로 자르기 위해 string화 하여 반복문을 진행한다.
         tmp+=int(i) # 들어온 string 형태의 숫자를 int로 변환해 tmp 값에 더해준다.
     return tmp # 반복문이 끝나면 최종 합을 반환한다.
 
