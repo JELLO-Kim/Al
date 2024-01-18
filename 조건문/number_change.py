@@ -19,3 +19,16 @@ def time_add():
     h, m = 23, 48
     cook = 25
     print((h+((m+cook)//60))%24, (m+cook)%60)
+
+def set_list():
+    A,B,C=3, 3, 6
+    num_set_list=list(set([A,B,C]))
+    if len(num_set_list) == 3:
+        print(max([A,B,C])*100)
+    elif len(num_set_list) == 2:
+        tmp_list = [A,B,C]
+        tmp_list.sort()
+        print(1000+tmp_list[1]*100)
+    else:
+        print(10000+A*1000)
+set_list()
