@@ -23,11 +23,13 @@ cnt = 0
 for i in range(7):
     for j in range(3):
         check_num = "".join(pal_list[i][j:j+5])
-        reverse_num = reverse(int(check_num))
+        # reverse_num = reverse(int(check_num))
+        reverse_num = check_num[::-1]
         if check_num == reverse_num:
             cnt+=1
         check_num2 = "".join(pal_list[j+k][i] for k in range(5))
-        reverse_num2 = reverse(int(check_num2))
+        # reverse_num2 = reverse(int(check_num2))
+        reverse_num2 = check_num2[::-1]
         if check_num2 == reverse_num2:
             cnt+=1
 print(cnt)
