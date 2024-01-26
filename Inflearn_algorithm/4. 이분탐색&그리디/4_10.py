@@ -1,4 +1,9 @@
 # 그리디 (역수열)
+"""
+8
+5 3 4 0 2 1 1 0
+출력 : 4 8 6 2 5 1 3 7
+"""
 import sys
 sys.stdin = open("input.txt")
 def sol():
