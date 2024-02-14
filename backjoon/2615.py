@@ -1,7 +1,7 @@
 # DFS로 풀기
 
 import sys
-sys.stdin = open("input2.txt", "r")
+sys.stdin = open("input.txt", "r")
 
 
 """
