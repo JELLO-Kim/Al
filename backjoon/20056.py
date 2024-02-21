@@ -108,12 +108,6 @@ for _ in range(k):
                 tt = [x, y, play[x][y][0][0], play[x][y][0][1], play[x][y][0][2]]
                 fire_dq.append(tt)
 
-
-    # 확인하기
-    # print(f"{sub_k}번째 이동 후 ======================")
-    # for a in play:
-    #     print(a)
-    # print("======================")
 # 이동 횟수 끝났으면 play 에서 계산하기
 total_m = 0
 for ball in play:
