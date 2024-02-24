@@ -17,11 +17,9 @@ for x in range(0, n):
 dx = [-1, 0, 1, 0]
 dy = [0, -1, 0, 1]
 
-q = deque()
-q.append(shark)
-sq = deque()
-def find_fish(x, y, lv, visit) -> list:
-    sq.append([x, y, visit])
+def find_fish(x, y, lv, visit, distance) -> list:
+    sq = deque()
+    sq.append([x, y, visit, distance])
     loop_lv = 0
     while sq:
         loop_lv += 1
@@ -30,6 +28,7 @@ def find_fish(x, y, lv, visit) -> list:
         for _ in range(len(sq)):
             target = sq.popleft()
             visit = target[2]
+            distance = target[3]
             for i in range(4):
                 xx = target[0] + dx[i]
                 yy = target[1] + dy[i]
@@ -39,11 +38,11 @@ def find_fish(x, y, lv, visit) -> list:
                     # 먹을 수 있는 생선이다.
                     try:
                         if 0 < area[xx][yy] < lv:
-                            can_eat.add((xx, yy))
+                            can_eat.add((xx, yy, distance+1))
                         # 빈공간은 무조건 이동 가능하다. (먹는건 없음)
                         elif area[xx][yy] in [0, lv] and not visit[xx][yy]:
                             visit[xx][yy] = True
-                            sq.append([xx, yy, visit])
+                            sq.append([xx, yy, visit, distance+1])
                     except Exception as e:
                         print(e)
                         continue
@@ -78,25 +77,21 @@ def find_fish(x, y, lv, visit) -> list:
             return next_target
 
     return None
-# shark = [x, row.index(9), 2, 0] | x, y, level, lv_eat
+
 cnt = 0
 while True:
-    visit = [[False]*n for _ in range(n)]
+    visit = [[False] * n for _ in range(n)]
     visit[shark[0]][shark[1]] = True
-    next_fish = find_fish(shark[0], shark[1], shark[2], visit)
+    next_fish = find_fish(shark[0], shark[1], shark[2], visit, 0) # x, y, level, visit, 이동거리
     # 한번 이동할때 인접한 크기로 1초씩 이므로 가장 가까운 물고기의 이동 칸수만큼 초가 더해진다
     if not next_fish:
         print(cnt)
         break
-    cnt += (abs(shark[0]-next_fish[0]) + abs(shark[1] - next_fish[1]))
+    cnt += next_fish[2]
     area[next_fish[0]][next_fish[1]] = 0
     shark[3] += 1
     # 레벨 마리수 만큼 먹었으면 레벨업!
     if shark[2] == shark[3]:
         shark[2] += 1
         shark[3] = 0
-    shark[0:2] = next_fish
-
-
-
-
+    shark[0:2] = next_fish[0:2]
