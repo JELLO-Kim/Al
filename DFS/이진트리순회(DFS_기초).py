@@ -23,5 +23,5 @@ def DFS(x):
         DFS(x*2+1)
         print(x, end=' ')
 
-if __name__='__main__':
+if __name__=='__main__':
     DFS(1)
