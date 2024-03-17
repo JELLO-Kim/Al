@@ -26,15 +26,18 @@ def check_cost(mid):
             if distances[next_node] > this_cost + next_cost and next_cost <= mid:
                 distances[next_node] = next_cost + this_cost
                 heapq.heappush(edge, [this_cost + next_cost, next_node])
+    print(f"distance : {distances}")
     if distances[b] > c:
         return False
     return True
 road_max_min = sys.maxsize
+costs = list(set(costs))
 costs.sort()
 lt = 0
 rt = len(costs) -1
 while lt <= rt:
     mid = (lt + rt) // 2
+    print(f"현재 mid : {costs[mid]}", end=" | ")
     # mid 값을 최대로 갖는 경로가 있는지 확인한다.
     check_res = check_cost(costs[mid])
     if check_res:
