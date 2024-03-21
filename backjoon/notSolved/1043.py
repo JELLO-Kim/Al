@@ -1,75 +1,42 @@
 import sys
-from itertools import combinations
 sys.setrecursionlimit(10**6) # 재귀 깊이 제한 늘리기
 sys.stdin = open("input.txt")
 n, m = map(int, input().split())
-tmpp = list(map(int, input().split()))
-parent = [i for i in range(n+1)]
-truth_pp = tmpp[1:]
+pure_group = set(list((map(int, input().split())))[1:])
+party_info = [list(map(int, input().split())) for _ in range(m)]
+parent = [i for i in range(n+1)] # 0 부터 n까지 parent 자기자신 세팅
 
-if not truth_pp:
-    root_truth_pp = 0
-else:
-    root_truth_pp = min(truth_pp)
-    for i in tmpp[1:]:
-        parent[i] = root_truth_pp
+# 들어온 x 의 root 찾기
+def check(x):
+    if parent[x] != x:
+        parent[x] = check(parent[x])
+    return parent[x]
 
-party_info = []
-for _ in range(m):
-    tmp = list(map(int, input().split()))[1:]
-    min_root = max(tmp)
-    for y in tmp:
-        min_root = min(min_root, parent[y]) # 최단 root 값 구하기
-    for yy in tmp:
-        parent[yy] = min_root
-        # if parent[y] > min_root:
-        #     parent[y]
-        # if y in truth_pp:
-        #     for yy in tmp:
-        #         parent[yy] = root_truth_pp
-        #     break
-    party_info.append(tmp)
+for one in party_info:
+    p = one[1:] # 젤 앞 수는 참여인원 수
+    p.sort()  # 오름차순 정렬
+    p_parent = p[0] # 젤 앞에수가 가장 적으므로 이 그룹내의 parent 로 지정
+    for i in p:
+        check_p_parent = check(i)
+        p_parent = min(p_parent, check_p_parent)
+    # 각 값의 root를 p_parent 로 바꾼다.
+    for j in p:
+        j_parent = check(j)
+        parent[j_parent] = p_parent
 
-lie_count = 0
-for party in party_info:
-    for one in party:
-        if parent[one] == root_truth_pp:
+    # 각 root 확인해서 pure랑 관련있으면 넣는다
+    for nods, row in enumerate(parent):
+        if nods in pure_group:
+            pure_group.add(row)
+
+# 파티체크 하면서 해당 노드의 루트가 거짓그룹에 있는지 확인하기
+count = 0
+for one_party in party_info:
+    one = one_party[1:]
+    for i in one:
+        if check(i) in pure_group:
             break
     else:
-        lie_count += 1
-print(lie_count)
+        count += 1
 
-
-# def check_parent(x):
-#     if parent[x] != x:
-#         parent[x] = check_parent(parent[x])
-#     return parent[x]
-#
-# def check_lie(party_tuple):
-#     lie_count = 0
-#     for mm in party_tuple:
-#         party_in = party_info[mm]
-#         for one in party_in:
-#             one_parent = check_parent(one)
-#             if one_parent == root_truth_pp:
-#                 break
-#         else:
-#             lie_count += 1
-#     return lie_count
-# # 파티참석하면서 구라횟수 진실횟수 카운팅
-# lt = 0
-# rt = m
-# res = 0
-# def sol1():
-#     while lt <= rt:
-#         mid = (lt + rt) // 2
-#         # mid 개 파티를 참석하는 경우의 수 모두 뽑기
-#         for i in combinations([j for j in range(m)], mid):
-#             if check_lie(i) == mid:
-#                 lt = mid + 1
-#                 # 참석 갯수만큼 거짓말 칠수 있으므로 답으로 기록한다.
-#                 res = max(res, mid)
-#                 break
-#         else:
-#             rt = mid -1
-#     print(res)
+print(count)
